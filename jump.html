@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<script type="text/javascript" src="http://developer.baidu.com/map/custom/stylelist.js"></script>
+		<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Pj1daSu1TfAG1pfenDmp2pnE0OlKM8cX"></script>
+		<title></title>
+		<style type="text/css">
+			body,
+			html,
+			#baidumap {
+				padding: 0;
+				margin: 0;
+				height: 100%;
+				width: 100%;
+				text-align: center;
+				font-family: "book antiqua";
+			}
+			
+			#daohang {
+				position: absolute;
+				margin-left: 25%;
+				top: 0;
+				width: 50%;
+				height: auto;
+				background: rgba(255, 255, 255, 1);
+			}
+			
+			#luxian {
+				position: absolute;
+				left: 0%;
+				top: 10%;
+				width: 400px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="baidumap"></div>
+		<fieldset id="daohang">
+			<legend align="center">路线规划</legend>
+			<article id="querycontent">
+				起点：<input type="text" id="txt_a" value="" /> 终点：
+				<input type="text" id="txt_b" value="" />
+				<input type="button" id="btn_WalkRouteQuery" value="步行路线" />
+				<input type="button" id="btn_DrivingQuery" value="驾车路线" />
+				<input type="button" id="btn_BusQuery" value="公交路线" />
+			</article>
+			<div id="searchResultPanel" style="border:1px solid #cococo;width:150px;height:auto; display:none;"></div>
+		</fieldset>
+
+		<div id="luxian"></div>
+
+	</body>
+
+</html>
+
+<script type="text/javascript">
+	var map;
+	map = new BMap.Map("baidumap");
+	map.centerAndZoom(new BMap.Point(114.353622, 30.56486), 15);
+	size = new BMap.Size(10, 20);
+	map.addControl(new BMap.CityListControl({
+		anchor: BMAP_ANCHOR_TOP_LEFT,
+		offset: size,
+	}));
+	map.setCurrentCity("武汉");
+	map.enableScrollWheelZoom(true);
+
+	document.getElementById("btn_WalkRouteQuery").addEventListener("click", function() {
+		map.clearOverlays();
+		var a = document.getElementById("txt_a").value;
+		var b = document.getElementById("txt_b").value;
+		var walking = new BMap.WalkingRoute(map, { renderOptions: { map: map, panel: "luxian", autoViewport: true } });
+		walking.search(a, b);
+
+	});
+
+	document.getElementById("btn_DrivingQuery").addEventListener("click", function() {
+		map.clearOverlays();
+		var a = document.getElementById("txt_a").value;
+		var b = document.getElementById("txt_b").value;
+		var driving = new BMap.DrivingRoute(map, { renderOptions: { map: map, panel: "luxian", autoViewport: true } });
+		driving.search(a, b);
+	});
+
+	document.getElementById("btn_BusQuery").addEventListener("click", function() {
+		map.clearOverlays();
+		var a = document.getElementById("txt_a").value;
+		var b = document.getElementById("txt_b").value;
+		var transit = new BMap.TransitRoute(map, {
+			renderOptions: { map: map, panel: "luxian" }
+		});
+		transit.search(a, b);
+	});
+</script>
